@@ -27,21 +27,25 @@
         
         <div class="card shadow mb-4 border-secondary">
             <div class="card-header bg-dark text-white border-secondary fw-bold">
-                <i class="bi bi-gear-fill me-2 text-info"></i> Update Resume & Drive Links
+                <i class="bi bi-gear-fill me-2 text-info"></i> Update Resume, Drive & GitHub Links
             </div>
             <div class="card-body bg-white">
                 <form action="/update_site_settings" method="POST" enctype="multipart/form-data">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold">Upload New Resume (PDF)</label>
                             <input type="file" name="resume" class="form-control" accept=".pdf">
                             <small class="text-muted mt-2 d-block">Current: 
                                 <a href="{{ settings.get('resume_url', '#') }}" target="_blank" class="text-primary fw-bold">View Live Resume</a>
                             </small>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold">Verified Certificates Drive Link</label>
                             <input type="url" name="drive_link" class="form-control" placeholder="https://drive.google.com/..." value="{{ settings.get('drive_link', '') }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold">GitHub Repositories Link</label>
+                            <input type="url" name="github_link" class="form-control" placeholder="https://github.com/..." value="{{ settings.get('github_link', '') }}">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-info text-dark fw-bold"><i class="bi bi-cloud-arrow-up-fill me-2"></i>Save Site Settings</button>

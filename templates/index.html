@@ -220,30 +220,30 @@
                   </div>
                   <div class="skill-item">
                     <div class="skill-info"><span class="skill-name">Java Programming</span><span
-                        class="skill-percent">85%</span></div>
+                        class="skill-percent">95%</span></div>
                     <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 85%"></div>
+                      <div class="progress-bar" role="progressbar" style="width: 95%"></div>
                     </div>
                   </div>
                   <div class="skill-item">
                     <div class="skill-info"><span class="skill-name">Python (Flask)</span><span
-                        class="skill-percent">80%</span></div>
+                        class="skill-percent">90%</span></div>
                     <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 80%"></div>
+                      <div class="progress-bar" role="progressbar" style="width: 90%"></div>
                     </div>
                   </div>
                   <div class="skill-item">
                     <div class="skill-info"><span class="skill-name">HTML, CSS, JavaScript</span><span
-                        class="skill-percent">85%</span></div>
+                        class="skill-percent">95%</span></div>
                     <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 85%"></div>
+                      <div class="progress-bar" role="progressbar" style="width: 95%"></div>
                     </div>
                   </div>
                   <div class="skill-item">
                     <div class="skill-info"><span class="skill-name">SQL & MongoDB</span><span
-                        class="skill-percent">75%</span></div>
+                        class="skill-percent">96%</span></div>
                     <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 75%"></div>
+                      <div class="progress-bar" role="progressbar" style="width: 96%"></div>
                     </div>
                   </div>
                 </div>
@@ -365,6 +365,20 @@
                     </div>
                   </div>
                   <div class="timeline-item">
+                    <div class="timeline-marker"><i class="bi bi-award-fill"></i></div>
+                    <div class="timeline-content">
+                      <h4>Google AI Essentials</h4>
+                      <p class="institution">Google</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-marker"><i class="bi bi-cloud-fill"></i></div>
+                    <div class="timeline-content">
+                      <h4>AWS Certified Cloud Practitioner Essentials</h4>
+                      <p class="institution">Amazon Web Services (AWS)</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
                     <div class="timeline-marker"><i class="bi bi-briefcase-fill"></i></div>
                     <div class="timeline-content">
                       <h4>Job Simulations (Forage Certifications)</h4>
@@ -390,9 +404,9 @@
         <span class="subtitle">Credentials</span>
         <h2>Certificates</h2>
         <p>Verified certificates and awards.</p>
-        {% if drive_folder_link %}
+        {% if drive_link %}
         <div class="mt-4">
-          <a href="{{ drive_folder_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-glow-drive">
+          <a href="{{ drive_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-glow-drive">
             <i class="bi bi-google me-2"></i>View on Google Drive
           </a>
         </div>
@@ -448,6 +462,13 @@
         <span class="subtitle">My Work</span>
         <h2>Projects</h2>
         <p>A showcase of my recent development projects.</p>
+        {% if github_link %}
+        <div class="mt-4">
+          <a href="{{ github_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-glow-github">
+            <i class="bi bi-github me-2"></i>View on GitHub
+          </a>
+        </div>
+        {% endif %}
       </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -595,10 +616,19 @@
     </div>
 
     <div class="chat-options">
-      <button onclick="sendOption('skills')">What are your skills?</button>
-      <button onclick="sendOption('projects')">Show me projects</button>
-      <button onclick="sendOption('contact')">How to contact?</button>
+      <button onclick="sendOption('about')">About Sivaraj</button>
+      <button onclick="sendOption('skills')">Skills & Tech</button>
+      <button onclick="sendOption('projects')">Projects</button>
+      <button onclick="sendOption('experience')">Work Experience</button>
+      <button onclick="sendOption('certifications')">Certifications</button>
+      <button onclick="sendOption('achievements')">Achievements</button>
+      <button onclick="sendOption('contact')">Contact Info</button>
       <button onclick="sendOption('resume')">Download Resume</button>
+    </div>
+
+    <div class="chat-input-container">
+      <input type="text" id="chat-user-input" placeholder="Ask me something..." onkeypress="handleKeyPress(event)">
+      <button onclick="sendUserMessage()" aria-label="Send Message"><i class="bi bi-send-fill"></i></button>
     </div>
   </div>
 
@@ -663,45 +693,200 @@
       chatWindow.classList.toggle('hidden');
     }
 
-    function sendOption(option) {
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendUserMessage();
+      }
+    }
+
+    function sendUserMessage() {
+      const inputEl = document.getElementById('chat-user-input');
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      appendMessage(text, 'user-message');
+      inputEl.value = '';
+
+      setTimeout(() => {
+        const response = getBotResponse(text);
+        appendMessage(response, 'bot-message');
+      }, 500);
+    }
+
+    function appendMessage(text, className) {
       const chatMessages = document.getElementById('chat-messages');
-
-      let userText = "";
-      if (option === 'skills') userText = "What are your skills?";
-      if (option === 'projects') userText = "Show me projects";
-      if (option === 'contact') userText = "How to contact?";
-      if (option === 'resume') userText = "Download Resume";
-
-      const userMsg = document.createElement('div');
-      userMsg.className = 'message user-message';
-      userMsg.innerText = userText;
-      chatMessages.appendChild(userMsg);
-
+      const msgEl = document.createElement('div');
+      msgEl.className = 'message ' + className;
+      msgEl.innerHTML = text;
+      chatMessages.appendChild(msgEl);
       chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function sendOption(option) {
+      let userText = "";
+      if (option === 'about') userText = "Tell me about Sivaraj";
+      else if (option === 'skills') userText = "What are your technical skills?";
+      else if (option === 'projects') userText = "Show me your projects";
+      else if (option === 'experience') userText = "What is your work experience?";
+      else if (option === 'certifications') userText = "What certifications do you have?";
+      else if (option === 'achievements') userText = "What are your achievements?";
+      else if (option === 'contact') userText = "How do I contact you?";
+      else if (option === 'resume') userText = "Can I download your resume?";
+
+      appendMessage(userText, 'user-message');
 
       setTimeout(() => {
         let botText = "";
-
-        if (option === 'skills') {
-          botText = "Sivaraj is proficient in <b>Python, Java, C++, and SQL</b>. He is also skilled in Web Development using Flask and Bootstrap!";
+        if (option === 'about') {
+          botText = "Sivaraj T is a passionate B.Tech Information Technology student at Velammal Engineering College, Chennai (expected graduation 2028). He is a Web Developer and Machine Learning practitioner with a GPA of 8.55.";
+        } else if (option === 'skills') {
+          botText = "Sivaraj has a strong technical skillset:<br><ul>" +
+            "<li><b>Languages:</b> Python, Java, C, C++</li>" +
+            "<li><b>Web Dev:</b> Flask, SQL, MongoDB, HTML, CSS, JavaScript</li>" +
+            "<li><b>Data Science:</b> Scikit-learn (Random Forest, Decision Trees), NumPy, Pandas</li>" +
+            "<li><b>Tools:</b> Git, GitHub, Google Cloud (GenAI Studio), PythonAnywhere</li>" +
+            "</ul>";
         } else if (option === 'projects') {
-          botText = "Check out the <b>Projects Section</b> above! Some highlights are the Blood Bank System and DBMS Application.";
+          botText = "Some of Sivaraj's key projects include:<br><ul>" +
+            "<li><b>MediScan AI:</b> Hackathon 2nd Place health triage with symptom analysis and rPPG heart rate detection.</li>" +
+            "<li><b>TNFSC Fire Predictor:</b> ML early-warning system shortlisted for State Finals.</li>" +
+            "<li><b>Smart Crop Predictor:</b> AgriTech ML model recommending crops based on soil nutrients.</li>" +
+            "<li><b>LifeFlow:</b> A live blood donor matching system (<a href='https://sivaraj09.pythonanywhere.com' target='_blank' style='color: #0d6efd;'>sivaraj09.pythonanywhere.com</a>).</li>" +
+            "</ul>";
           document.querySelector('#portfolio').scrollIntoView({ behavior: 'smooth' });
+        } else if (option === 'experience') {
+          botText = "Sivaraj works as a <b>Senior Web Developer (Freelance) at CyphraNovaTech Solutions</b> (since March 2026). He has built client platforms like Stepworth Consultancy and college feedback automation systems.";
+        } else if (option === 'certifications') {
+          botText = "Sivaraj holds several notable certifications:<br><ul>" +
+            "<li><b>Google AI Essentials</b></li>" +
+            "<li><b>AWS Certified Cloud Practitioner Essentials</b></li>" +
+            "<li><b>NPTEL Python for Data Science</b> (Elite Silver Medalist)</li>" +
+            "<li><b>Generative AI Studio</b> (Google Cloud)</li>" +
+            "<li>Forage Job Simulations (Tata & Deloitte)</li>" +
+            "</ul>";
+          document.querySelector('#certificates').scrollIntoView({ behavior: 'smooth' });
+        } else if (option === 'achievements') {
+          botText = "Key achievements:<br><ul>" +
+            "<li><b>2nd Place:</b> Hackathon at Velammal Engineering College.</li>" +
+            "<li><b>1st Place:</b> Project Expo.</li>" +
+            "<li><b>3rd Place:</b> Regional Cybersecurity CTF Event.</li>" +
+            "<li><b>State Finalist:</b> TNFSC Smart Fire Innovation Challenge.</li>" +
+            "<li><b>SkillRack:</b> Solved 1600+ problems and earned 550+ Bronze Medals.</li>" +
+            "</ul>";
         } else if (option === 'contact') {
-          botText = "You can email him at <b>tsivaraj2007@gmail.com</b> or use the contact form at the bottom of the page.";
+          botText = "You can contact Sivaraj at:<br><ul>" +
+            "<li><b>Email:</b> <a href='mailto:tsivaraj2007@gmail.com' style='color: #0d6efd;'>tsivaraj2007@gmail.com</a></li>" +
+            "<li><b>Phone:</b> +91 9677552151</li>" +
+            "<li><b>GitHub:</b> <a href='https://github.com/Sivaraj-T-hash' target='_blank' style='color: #0d6efd;'>Sivaraj-T-hash</a></li>" +
+            "<li><b>LinkedIn:</b> <a href='https://www.linkedin.com/in/sivaraj-t-8a6a55280/' target='_blank' style='color: #0d6efd;'>LinkedIn</a></li>" +
+            "</ul>";
           document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
         } else if (option === 'resume') {
-          botText = "Sure! You can <a href='https://res.cloudinary.com/doqgziycf/raw/upload/v1781188642/Sivaraj_Resume_june_2026.pdf' target='_blank' style='color: #0d6efd; text-decoration: underline; font-weight: bold;'>download my resume here</a> or check the Resume section below.";
+          botText = "Sure! You can download his resume here: <a href='https://res.cloudinary.com/doqgziycf/raw/upload/v1781188642/Sivaraj_Resume_june_2026.pdf' target='_blank' style='color: #0d6efd; text-decoration: underline; font-weight: bold;'>Sivaraj Resume PDF</a>.";
           document.querySelector('#resume').scrollIntoView({ behavior: 'smooth' });
         }
-
-        const botMsg = document.createElement('div');
-        botMsg.className = 'message bot-message';
-        botMsg.innerHTML = botText;
-        chatMessages.appendChild(botMsg);
-
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        appendMessage(botText, 'bot-message');
       }, 600);
+    }
+
+    function getBotResponse(query) {
+      const q = query.toLowerCase();
+
+      // Specific Projects first
+      if (q.includes('mediscan') || q.includes('medi scan')) {
+        return "<b>MediScan AI</b> is an award-winning health assistant. Key features:<br><ul>" +
+          "<li>Won 2nd Place at Velammal Engineering College Hackathon.</li>" +
+          "<li>AI-powered symptom analysis.</li>" +
+          "<li>Non-contact heart-rate detection (rPPG via camera feed).</li>" +
+          "<li>Bilingual voice interface (English & Tamil).</li>" +
+          "</ul>";
+      }
+      if (q.includes('lifeflow') || q.includes('blood') || q.includes('donor')) {
+        return "<b>LifeFlow</b> is a full-stack Blood Bank & Donor Management System built using Python, Flask, and MongoDB. It connects blood donors with recipients in real-time. Live link: <a href='https://sivaraj09.pythonanywhere.com' target='_blank' style='color: #0d6efd;'>sivaraj09.pythonanywhere.com</a>";
+      }
+      if (q.includes('fire') || q.includes('tnfsc') || q.includes('risk')) {
+        return "The <b>TNFSC Fire Predictor</b> is a Smart Fire Risk Predictive System shortlisted for the TNFSC Smart Fire Innovation Challenge State Finals. It uses Scikit-learn Random Forest classification to predict environmental fire risks.";
+      }
+      if (q.includes('crop') || q.includes('agriculture') || q.includes('farming') || q.includes('plant')) {
+        return "The <b>Smart Crop Predictor</b> is a Machine Learning tool that analyzes soil parameters (N, P, K), climate, and weather data to recommend the most suitable crops for farmers.";
+      }
+      if (q.includes('capsule') || q.includes('time')) {
+        return "The <b>Digital Time Capsule</b> is a web-based secure archiving system built using C++, Flask, and MongoDB. It allows users to lock messages and media until a specific unlock date.";
+      }
+
+      // Resume
+      if (q.includes('resume') || q.includes('cv') || q.includes('bio') || q.includes('download')) {
+        return "You can view and download Sivaraj's resume here: <a href='https://res.cloudinary.com/doqgziycf/raw/upload/v1781188642/Sivaraj_Resume_june_2026.pdf' target='_blank' style='color: #0d6efd; font-weight: bold;'>Sivaraj Resume PDF</a>.";
+      }
+
+      // Skills
+      if (q.includes('skill') || q.includes('language') || q.includes('tech') || q.includes('program') || q.includes('code') || q.includes('python') || q.includes('java') || q.includes('c++') || q.includes('sql') || q.includes('mongodb') || q.includes('flask')) {
+        return "Sivaraj is highly proficient in:<br><ul>" +
+          "<li><b>Languages:</b> Python, Java, C, C++</li>" +
+          "<li><b>Web Dev:</b> Flask, SQL, MongoDB, HTML, CSS, JavaScript</li>" +
+          "<li><b>Machine Learning:</b> Scikit-learn (Random Forest, Decision Trees), NumPy, Pandas</li>" +
+          "<li><b>Tools:</b> Git, GitHub, Google Cloud (GenAI Studio), PythonAnywhere</li>" +
+          "</ul>";
+      }
+
+      // Projects (General)
+      if (q.includes('project') || q.includes('portfolio') || q.includes('build')) {
+        return "Sivaraj has built several impressive AI/ML and Web projects. Highlighting:<br><ul>" +
+          "<li><b>MediScan AI</b> (AI Health triage, OpenCV, 2nd Place Hackathon)</li>" +
+          "<li><b>TNFSC Fire Predictor</b> (State Finalist predictive software)</li>" +
+          "<li><b>Smart Crop Predictor</b> (Precision Agriculture ML)</li>" +
+          "<li><b>LifeFlow</b> (Deployed Blood Donor Platform)</li>" +
+          "</ul>";
+      }
+
+      // Certifications
+      if (q.includes('certificat') || q.includes('certify') || q.includes('credential') || q.includes('nptel') || q.includes('google') || q.includes('aws')) {
+        return "Sivaraj's key certifications:<br><ul>" +
+          "<li><b>AWS Certified Cloud Practitioner Essentials</b></li>" +
+          "<li><b>Google AI Essentials</b></li>" +
+          "<li><b>NPTEL Python for Data Science</b> (Elite Silver Medalist)</li>" +
+          "<li><b>Generative AI Studio</b> (Google Cloud)</li>" +
+          "<li>Forage Job Simulations: GenAI Powered Data Analytics (Tata), Cybersecurity (Tata), Data Analytics (Deloitte)</li>" +
+          "</ul>";
+      }
+
+      // Achievements
+      if (q.includes('achieve') || q.includes('award') || q.includes('prize') || q.includes('win') || q.includes('hackathon') || q.includes('ctf') || q.includes('contest') || q.includes('competition')) {
+        return "Sivaraj's top achievements:<br><ul>" +
+          "<li><b>2nd Place:</b> Velammal Engineering College Hackathon.</li>" +
+          "<li><b>1st Place:</b> Project Expo.</li>" +
+          "<li><b>3rd Place:</b> Regional Cybersecurity CTF (Capture The Flag) Event.</li>" +
+          "<li><b>State Finalist:</b> TNFSC Smart Fire Innovation Challenge.</li>" +
+          "<li><b>SkillRack:</b> 1600+ solved problems, 550+ Bronze Medals.</li>" +
+          "</ul>";
+      }
+
+      // Education
+      if (q.includes('educat') || q.includes('college') || q.includes('study') || q.includes('degree') || q.includes('university') || q.includes('gpa') || q.includes('cgpa') || q.includes('school') || q.includes('velammal')) {
+        return "Sivaraj is pursuing his <b>B.Tech in Information Technology</b> at <b>Velammal Engineering College, Chennai</b> (Expected 2028). He currently maintains a <b>GPA of 8.55</b>. He completed his school education with distinction at SRGDS Matriculation School.";
+      }
+
+      // Experience
+      if (q.includes('experience') || q.includes('job') || q.includes('career') || q.includes('work') || q.includes('freelance') || q.includes('cyphranova') || q.includes('stepworth')) {
+        return "Sivaraj works as a <b>Senior Web Developer (Freelancer) at CyphraNovaTech Solutions</b> (since March 2026). He specializes in custom institutional portal development and SEO solutions, including the official Stepworth Consultancy portal.";
+      }
+
+      // Contact
+      if (q.includes('contact') || q.includes('email') || q.includes('phone') || q.includes('hire') || q.includes('reach') || q.includes('social') || q.includes('linkedin') || q.includes('github') || q.includes('mail') || q.includes('address')) {
+        return "You can reach Sivaraj T via:<br><ul>" +
+          "<li><b>Email:</b> <a href='mailto:tsivaraj2007@gmail.com' style='color: #0d6efd;'>tsivaraj2007@gmail.com</a></li>" +
+          "<li><b>Phone:</b> +91 9677552151</li>" +
+          "<li><b>LinkedIn:</b> <a href='https://www.linkedin.com/in/sivaraj-t-8a6a55280/' target='_blank' style='color: #0d6efd;'>LinkedIn</a></li>" +
+          "<li><b>GitHub:</b> <a href='https://github.com/Sivaraj-T-hash' target='_blank' style='color: #0d6efd;'>GitHub</a></li>" +
+          "</ul>";
+      }
+
+      // Greetings / About
+      if (q.includes('hello') || q.includes('hi') || q.includes('hey') || q.includes('greetings') || q.includes('who are you') || q.includes('about')) {
+        return "Hello! I'm Sivaraj's AI Assistant. 🤖 How can I help you today? You can ask me about Sivaraj's skills, projects, certifications, work experience, or education!";
+      }
+
+      return "I'm not sure I understand. Can you please ask about Sivaraj's **skills**, **projects**, **education**, **work experience**, **achievements**, **certifications**, or how to **contact** him?";
     }
 
     function toggleProjects() {
@@ -841,7 +1026,7 @@
     left: 30px;
     right: auto;
     width: 340px;
-    height: 450px;
+    height: 480px;
     background: #1a1a1a;
     border-radius: 15px;
     box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
@@ -919,27 +1104,81 @@
   }
 
   .chat-options {
-    padding: 15px;
+    padding: 10px 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
-    flex-wrap: wrap;
+    overflow-x: auto;
+    flex-wrap: nowrap;
     gap: 8px;
+    white-space: nowrap;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .chat-options::-webkit-scrollbar {
+    display: none;
   }
 
   .chat-options button {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(13, 110, 253, 0.3);
     color: #0d6efd;
-    padding: 8px 12px;
+    padding: 6px 12px;
     border-radius: 20px;
     font-size: 12px;
     cursor: pointer;
     transition: all 0.2s;
+    flex: 0 0 auto;
   }
 
   .chat-options button:hover {
     background: #0d6efd;
     color: white;
+  }
+
+  .chat-input-container {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .chat-input-container input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: white;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+
+  .chat-input-container input:focus {
+    border-color: #0d6efd;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .chat-input-container button {
+    background: #0d6efd;
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .chat-input-container button:hover {
+    background: #0b5ed7;
+    transform: scale(1.05);
   }
 
   .custom-glass-modal {
@@ -990,9 +1229,17 @@
   }
 
   @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
+    0% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+
+    100% {
+      transform: translateY(0px);
+    }
   }
 
   .portfolio-item {
@@ -1125,6 +1372,27 @@
   .portfolio .portfolio-card .portfolio-image-container .portfolio-overlay .portfolio-actions a.portfolio-details:hover i {
     transform: translateX(3px) scale(1.1);
     background-color: color-mix(in srgb, var(--accent-color), white 15%);
+  }
+
+  .btn-glow-github {
+    background: linear-gradient(45deg, #171515, #333333);
+    color: white;
+    padding: 12px 35px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .btn-glow-github:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+    background: linear-gradient(45deg, #333333, #171515);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: white;
   }
 
   .btn-glow-drive {

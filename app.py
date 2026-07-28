@@ -6,6 +6,8 @@ from pymongo import MongoClient
 import certifi
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__, static_folder='assets', static_url_path='/assets')
 app.secret_key = 'super_secret_key'
@@ -50,13 +52,15 @@ def index():
         settings = settings_col.find_one({'_id': 'general'}) or {}
         resume_url = settings.get('resume_url', '#')
         drive_link = settings.get('drive_link', '#')
+        github_link = settings.get('github_link', 'https://github.com/Sivaraj-T-hash?tab=repositories')
         
         return render_template('index.html', 
                                certificates=certificates, 
                                projects=projects,
                                visitors=total_views,
                                resume_url=resume_url,
-                               drive_link=drive_link)
+                               drive_link=drive_link,
+                               github_link=github_link)
     except Exception as e:
         return f"<h1 style='color:red'>Database Error:</h1><p>{e}</p>"
 
@@ -103,6 +107,10 @@ def update_site_settings():
         drive_link = request.form.get('drive_link')
         if drive_link:
             update_data['drive_link'] = drive_link
+
+        github_link = request.form.get('github_link')
+        if github_link:
+            update_data['github_link'] = github_link
 
         resume = request.files.get('resume')
         if resume and resume.filename != '':
@@ -256,4 +264,4 @@ def update_project(id):
         return f"<h1>Update Error:</h1><p>{str(e)}</p><a href='/admin'>Back</a>"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,use_reloader=False)
