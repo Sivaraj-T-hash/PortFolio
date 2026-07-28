@@ -1,7 +1,8 @@
-﻿Flask
+Flask
 pymongo
 dnspython
 cloudinary
 certifi
 email_validator
 gunicorn
+python-dotenv
