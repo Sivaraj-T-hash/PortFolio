@@ -797,10 +797,10 @@ section,
   min-height: 100vh;
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   overflow: hidden;
-  padding-bottom: 80px;
+  padding-bottom: 120px;
 }
 
 .hero img {
