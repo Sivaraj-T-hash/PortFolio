@@ -236,4 +236,82 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+  /* =========================================================
+     UI COMPONENT: RAINBOW CURSOR TRAIL ENGINE
+  ========================================================== */
+  const trailCanvas = document.getElementById("cursor-trail-canvas");
+  if (trailCanvas) {
+    const trailCtx = trailCanvas.getContext("2d");
+    let trailParticles = [];
+
+    function resizeTrailCanvas() {
+      trailCanvas.width = window.innerWidth;
+      trailCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeTrailCanvas);
+    resizeTrailCanvas();
+
+    // Cycles through a vivid rainbow hue as the cursor moves
+    let trailHue = 200;
+
+    class TrailParticle {
+      constructor(x, y, hue) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 5 + 3;
+        this.hue = hue;
+        this.life = 1;
+        this.decay = Math.random() * 0.02 + 0.02;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = (Math.random() - 0.5) * 1.5 - 0.4;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+      }
+      draw() {
+        trailCtx.save();
+        trailCtx.globalAlpha = Math.max(this.life, 0);
+        const gradient = trailCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
+        gradient.addColorStop(0, `hsla(${this.hue}, 100%, 65%, 0.9)`);
+        gradient.addColorStop(1, `hsla(${this.hue}, 100%, 55%, 0)`);
+        trailCtx.fillStyle = gradient;
+        trailCtx.beginPath();
+        trailCtx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
+        trailCtx.fill();
+        trailCtx.restore();
+      }
+    }
+
+    function spawnTrailParticles(x, y) {
+      trailHue = (trailHue + 4) % 360;
+      for (let i = 0; i < 2; i++) {
+        trailParticles.push(new TrailParticle(x, y, trailHue));
+      }
+      // Cap the pool so long mouse sessions don't balloon memory
+      if (trailParticles.length > 200) {
+        trailParticles.splice(0, trailParticles.length - 200);
+      }
+    }
+
+    window.addEventListener("mousemove", (e) => {
+      spawnTrailParticles(e.clientX, e.clientY);
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      if (e.touches && e.touches[0]) {
+        spawnTrailParticles(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    function renderTrailLoop() {
+      trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+      trailParticles.forEach(p => { p.update(); p.draw(); });
+      trailParticles = trailParticles.filter(p => p.life > 0);
+      requestAnimationFrame(renderTrailLoop);
+    }
+    renderTrailLoop();
+  }
+
 })();
